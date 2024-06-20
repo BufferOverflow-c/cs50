@@ -1,0 +1,3 @@
+/Users/c2/Documents/cs50/problems/2024/x/cmake-build-debug/CMakeFiles/x.dir
+/Users/c2/Documents/cs50/problems/2024/x/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/c2/Documents/cs50/problems/2024/x/cmake-build-debug/CMakeFiles/rebuild_cache.dir

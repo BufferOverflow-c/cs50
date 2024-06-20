@@ -1,0 +1,4 @@
+"/Users/c2/Applications/CLion Nova.app/Contents/bin/cmake/mac/aarch64/bin/cmake" -DCMAKE_BUILD_TYPE=Debug "-DCMAKE_MAKE_PROGRAM=/Users/c2/Applications/CLion Nova.app/Contents/bin/ninja/mac/aarch64/ninja" -G Ninja -S /Users/c2/Documents/cs50/problems/2024/x -B /Users/c2/Documents/cs50/problems/2024/x/cmake-build-debug
+-- Configuring done (0.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /Users/c2/Documents/cs50/problems/2024/x/cmake-build-debug
