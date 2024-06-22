@@ -1,69 +1,60 @@
 #include <cs50.h>
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
 
-string convertToUpperCase(string text);
-string convertToLowerCase(string text);
+bool validate(string argv[]);
 
-int main(int argc, string argv[]) {
-    if(argc != 2) {
+int main(int argc, string argv[])
+{
+    if (argc != 2 || !validate(argv))
+    {
         printf("Usage: ./caesar KEY");
         return 1;
     }
 
     int key = atoi(argv[1]);
 
-    const char alpha[26] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
-    const size_t alphaSize = sizeof(alpha) / sizeof(alpha[0]);
+
+    const char alphaUpper[26] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+                                 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+
+    const char alphaLower[26] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+                                 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
 
     string plaintext = get_string("Plaintext: ");
-    char ciphertext[] = {};
+    string ciphertext = plaintext;
 
-    string plaintext_copy = convertToUpperCase(plaintext);
+    for (int j = 0; j < strlen(plaintext); j++)
+    {
+        for (int k = 0; alphaUpper[k] != '\0'; k++)
+        {
+            int pos = (k + key) % 26;
+            if (plaintext[j] == alphaUpper[k])
+            {
+                ciphertext[j] = alphaUpper[pos];
+                break;
+            }
 
-    for(int j = 0; j < strlen(plaintext_copy); j++) {
-        for(int k = 0; k < alphaSize; k++) {
-            if(plaintext_copy[j] == alpha[k]) {
-                int pos = (k+key)%26;
-                ciphertext[j] = alpha[pos];
+            if (plaintext[j] == alphaLower[k])
+            {
+                ciphertext[j] = alphaLower[pos];
+                break;
             }
         }
     }
 
-    plaintext_copy = convertToLowerCase(plaintext_copy);
-
-    printf("\nPlaintext: %s\n", plaintext_copy);
     printf("Ciphertext: %s\n", ciphertext);
 
     return 0;
 }
 
-string convertToUpperCase(string text) {
-    int i = 0;
-    while(text[i] != '\0') {
-        if(text[i] >= 'A' && text[i] <= 'Z') {
-            i++;
-            continue;
+bool validate(string argv[]) {
+    for(int i = 0; i < strlen(argv[1]); i++ ) {
+        if(!isdigit(argv[1][i])) {
+            return false;
         }
-
-        if(text[i] >= 'a' && text[i] <= 'z') {
-            text[i] = toupper(text[i]);
-            //text[i] ^= 32;
-        }
-        i++;
     }
-    return text;
-}
-
-string convertToLowerCase(string text) {
-    int i = 1;
-    while(text[i] != '\0') {
-        if(text[i] >= 'A' && text[i] <= 'Z') {
-            text[i] = tolower(text[i]);
-        }
-        i++;
-    }
-    return text;
+    return true;
 }
