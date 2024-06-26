@@ -4,25 +4,28 @@
 #include <stdlib.h>
 #include <string.h>
 
-void substitution(string text, char subAlpha[]);
-void cipher(string plaintext, string ciphertext, const char alphabet[], char subAlpha[]);
+bool validate(int argc, string argv[]);
 
 int main(int argc, string argv[])
 {
-    if (argc != 2)
+    if (!validate(argc, argv))
     {
         printf("Usage: ./substitution KEY");
         return 1;
     }
 
-    string text = argv[1];
+    string key = argv[1];
+
+    for(int i = 0; i < strlen(key); i++) {
+        key[i] = toupper(key[i]);
+    }
 
     const char alphabet[52] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-                                'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-                                'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-                                'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
+                               'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+                               'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+                               'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
 
-    char subAlpha[52] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+    char subAlphabet[52] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
                             'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
                             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
                             'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
@@ -30,35 +33,63 @@ int main(int argc, string argv[])
     string plaintext = get_string("Plaintext: ");
     string ciphertext = plaintext;
 
-    substitution(text, subAlpha);
-    cipher(plaintext, ciphertext, alphabet, subAlpha);
+    for (int i = 0; i < 52; i++)
+    {
+        while (i < 26)
+        {
+            subAlphabet[i] = key[i];
+            i++;
+        }
+        subAlphabet[i] = (key[i - 26] ^= 32);
+    }
 
-    printf("Ciphertext: %s\n", ciphertext);
+    for (int i = 0; i < strlen(plaintext); i++)
+    {
+        for (int j = 0; alphabet[j] != '\0'; j++)
+        {
+            if (plaintext[i] != alphabet[j])
+            {
+                continue;
+            }
+            ciphertext[i] = subAlphabet[j];
+            break;
+        }
+    }
+
+    printf("ciphertext: %s\n", ciphertext);
 
     return 0;
 }
 
-void substitution(string text, char subAlpha[]) {
-    int i = 0;
-    while(text[i] != '\0') {
-        subAlpha[i] = text[i];
-        i++;
-    };
-
-    for(int j = 0; text[j] != '\0'; j++) {
-        text[j] ^= 32;
-        subAlpha[i] = text[j];
-        i++;
+bool validate(int argc, string argv[])
+{
+    if (argc != 2 || strlen(argv[1]) != 26)
+    {
+        printf("Usage: ./substitution KEY");
+        return false;
     }
-}
 
-void cipher(string plaintext, string ciphertext, const char alphabet[], char subAlpha[]) {
-    for (int j = 0; j < strlen(plaintext); j++) {
-        for (int k = 0; alphabet[k] != '\0'; k++) {
-            if (plaintext[j] == alphabet[k]) {
-                ciphertext[j] = subAlpha[k];
-                break;
+    for (int i = 0; i < strlen(argv[1]); i++)
+    {
+        if ((argv[1][i] >= 'A' && argv[1][i] <= 'Z') || (argv[1][i] >= 'a' && argv[1][i] <= 'z'))
+        {
+            continue;
+        }
+        printf("Usage: ./substitution KEY");
+        return false;
+    }
+
+    for (int i = 0; i < strlen(argv[1]); i++)
+    {
+        for (int j = i + 1; j < strlen(argv[1]); j++)
+        {
+            if (argv[1][i] == argv[1][j])
+            {
+                printf("Usage: ./substitute KEY");
+                return false;
             }
         }
     }
+
+    return true;
 }
